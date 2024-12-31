@@ -44,6 +44,22 @@ export default function ProjectList({ navigation }) {
     }
   };
 
+  // const _retrieveData = async () => {
+  //   try {
+  //     const res = await AsyncStorage.getItem('projectDetails');
+  //     if (res !== null) {
+  //       const response = JSON.parse(res);
+  //       setProjectData(response); // Set the full list of projects
+  //       console.log('Data retrieved:', response);
+  //     } else {
+  //       console.log('No data found.');
+  //       setMsg('No data found.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch data from AsyncStorage:', error);
+  //   }
+  // };
+  
   const handleProjectClick = () => {
     navigation.navigate('ProjectDetails', { data: projectData });
   };

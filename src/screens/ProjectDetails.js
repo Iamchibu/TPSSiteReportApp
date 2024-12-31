@@ -21,7 +21,7 @@ const handleProjectImageClick = (data) => {
   };
   
   return (
-    <View style={{ padding: 10, flex: 1, backgroundColor: "#FFF" }}>
+    <View style={{ padding: 0, flex: 1, backgroundColor: "#FFF" }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", top: 0, position: "absolute", borderStartWidth: 2, borderStartColor: "#542d84", borderBottomColor: "#c8c808", borderBottomWidth: 0.5 }}>
 
       <Image

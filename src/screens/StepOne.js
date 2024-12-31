@@ -28,7 +28,8 @@ const StepOne = ({ navigation }) => {
       <Text style={styles.headerText}>Home Owner Information</Text>
 
       </View>
-    <ScrollView style={{ marginTop: 50 }}>
+
+    <ScrollView style={{ marginTop: 50, marginBottom: 100 }}>
       <View style={{ marginTop: 60, marginBottom: 60 }}>
           <TextInput
               backgroundColor={"#d9d1e9"}
@@ -202,7 +203,7 @@ const StepOne = ({ navigation }) => {
               fontSize={16}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
-              // keyboardType="numeric"
+              keyboardType="numeric"
               returnKeyType="next"
               placeholder={"Zip code"}
               placeholderTextColor={"#979797"}

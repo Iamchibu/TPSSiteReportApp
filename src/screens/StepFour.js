@@ -22,6 +22,10 @@ const StepFour = ({ navigation, route }) => {
   const [currentImage, setCurrentImage] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const [imageIndex, setImageIndex] = useState('');
+
+  const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -58,6 +62,17 @@ const StepFour = ({ navigation, route }) => {
     }
   };
 
+  const handleProjectImageClick = (data, index) => {
+    console.log("Dattttttaaaaa", data)
+    setIsImageModalVisible(true);
+    setImage(data)
+    setImageIndex(index)
+  };
+  
+  const handleCloseClick = () => {
+    setIsImageModalVisible(false);
+  };
+
   return (
     <View style={{ padding: 10, flex: 1, backgroundColor: "#FFF" }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", top: 0, position: "absolute", borderStartWidth: 2, borderStartColor: "#542d84", borderBottomColor: "#c8c808", borderBottomWidth: 0.5 }}>
@@ -72,7 +87,7 @@ const StepFour = ({ navigation, route }) => {
       <Text style={styles.headerText}>Project Site Photos</Text>
       </View>
 
-      <ScrollView>
+      <ScrollView style={{ marginTop: 50, marginBottom: 60 }}>
         <View style={styles.selectButtonContainer}>
           <TouchableOpacity style={styles.photosBtn} onPress={pickImage}>
             <Text style={styles.signInText}>Add More Images</Text>
@@ -81,7 +96,8 @@ const StepFour = ({ navigation, route }) => {
 
         <View style={styles.gridContainer}>
         {photos.map((photo, index) => (
-          <View key={index} style={styles.imageContainer}>
+          <TouchableOpacity key={index} style={styles.imageContainer}  onPress={() => handleProjectImageClick(photo, index)}>
+          {/* // <View key={index} style={styles.imageContainer}> */}
             <Image source={{ uri: photo.uri }} style={styles.image} />
             <TouchableOpacity
               style={styles.deleteButton}
@@ -103,7 +119,7 @@ const StepFour = ({ navigation, route }) => {
             ) : (
               <Text style={styles.imageText}>No Description</Text>
             )}
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
 
@@ -142,12 +158,14 @@ const StepFour = ({ navigation, route }) => {
              style={{ marginBottom: 10 }}/>}
             <TextInput
               placeholder="Title"
+              placeholderTextColor={"#979797"}
               value={title}
               onChangeText={setTitle}
               style={styles.input}
             />
             <TextInput
               placeholder="Description"
+              placeholderTextColor={"#979797"}
               value={description}
               multiline={true}
               numberOfLines={4}
@@ -160,6 +178,44 @@ const StepFour = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
+
+      {image && 
+            <Modal visible={isImageModalVisible} transparent>
+            <View style={styles.modalImageContainer}>
+              <View style={styles.modalImageContent}>
+                <Text style={styles.modalImageTitle}>{image?.title || 'No Title'}</Text>
+                <View style={styles.imageImageContainer}>
+                  {image?.uri ? (
+                    <Image source={{ uri: image.uri }} style={styles.detailsImage} />
+                  ) : (
+                    <Text>No Image Available</Text>
+                  )}
+                  <Text style={styles.modalImageDescription}>
+                    {image?.description || 'No Description'}
+                  </Text>
+                </View>
+
+                <View style={{ flexDirection: "row", width: width * 0.8, justifyContent: "space-between" }}>
+                <TouchableOpacity
+                  style={styles.deleteeButton}
+                  onPress={() => {
+                    setPhotos((prevPhotos) =>
+                      prevPhotos.filter((_, i) => i !== imageIndex)
+                    );
+                    setIsImageModalVisible(false);
+                  }}
+                >
+                <Text style={styles.closeButtonText}>Delete</Text>
+              </TouchableOpacity>
+
+                <TouchableOpacity style={styles.closeButton} onPress={handleCloseClick}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+              </View>
+            </View>
+          </Modal>
+             } 
     </View>
   );
 };
@@ -318,6 +374,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     height: 90,
+    textAlignVertical: 'top'
   },
   addButton: {
     backgroundColor: "#542d84",
@@ -326,6 +383,55 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+  },
+  modalImageContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalImageContent: {
+    width: "90%",
+    backgroundColor: "#FFF",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalImageTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  imageImageContainer: {
+    width: "45%",
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  detailsImage: {
+    width: width * 0.8,
+    height: height * 0.6,
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  modalImageDescription: {
+    fontSize: 12,
+    color: "#666",
+  },
+  deleteeButton: {
+    backgroundColor: "#FF0000",
+    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
+  },
+  closeButton: {
+    backgroundColor: "#542d84",
+    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
+  },
+  closeButtonText: {
     color: "#FFF",
     fontSize: 16,
   },

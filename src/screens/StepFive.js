@@ -53,6 +53,28 @@ const StepFive = ({ navigation, route }) => {
     console.log("This is for storing data...", value);
   };
 
+  // const _storeData = async (newData) => {
+  //   try {
+  //     // Retrieve existing data
+  //     const existingData = await AsyncStorage.getItem("projectDetails");
+  //     let data = existingData ? JSON.parse(existingData) : [];
+  
+  //     // Ensure data is an array
+  //     if (!Array.isArray(data)) {
+  //       data = []; // Initialize as an empty array if the retrieved data isn't an array
+  //     }
+  
+  //     // Append new data
+  //     data.push(newData);
+  
+  //     // Store updated data
+  //     await AsyncStorage.setItem("projectDetails", JSON.stringify(data));
+  //     console.log("Data stored successfully:", data);
+  //   } catch (error) {
+  //     console.error("Error storing data:", error);
+  //   }
+  // };
+
   return (
     <View style={{ backgroundColor: "#FFF", flex: 1 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", top: 0, position: "absolute", borderStartWidth: 2, borderStartColor: "#542d84", borderBottomColor: "#c8c808", borderBottomWidth: 0.5 }}>
