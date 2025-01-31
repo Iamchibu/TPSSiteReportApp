@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveStepData } from '../../redux/actions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const StepThree = ({ navigation, route }) => {
-  const { one, two } = route.params;
+  const dispatch = useDispatch();
+  const formData = useSelector(state => state.stepThree) || {};
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [firstName, setFirstName] = React.useState(formData.firstName || '');
+  const [lastName, setLastName] = React.useState(formData.lastName || '');
+  const [phone, setPhone] = React.useState(formData.phone || '');
+
+  const handleNext = () => {
+    dispatch(saveStepData('stepThree', { firstName, lastName, phone }));
+    navigation.navigate('StepFour');
+  };
 
   return (
     <View style={{ padding: 10, flex: 1, backgroundColor: "#FFF" }}>
@@ -125,7 +133,7 @@ const StepThree = ({ navigation, route }) => {
             <Text style={styles.signInText}>Previous</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.registerBtn} onPress={() => navigation.navigate('StepFour', { one: one, two: two, three: { firstName, lastName, phone }})}>  
+            <TouchableOpacity style={styles.registerBtn} onPress={handleNext}>  
             <Text style={styles.registerText}>Next</Text>
             </TouchableOpacity>
       </View>

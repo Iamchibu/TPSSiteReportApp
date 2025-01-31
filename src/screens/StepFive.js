@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
+import { View, ScrollView, Text, Platform, Image, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveStepData } from '../../redux/actions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const StepFive = ({ navigation, route }) => {
-  const { one, two, three, four } = route.params;
+  // const { one, two, three, four } = route.params;
+  const dispatch = useDispatch();
+  const formData = useSelector(state => state) || {};
+
   const [image, setImage] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -25,54 +30,19 @@ const StepFive = ({ navigation, route }) => {
     console.log("Form submitted!");
 
     const payload = {
-      one: one,
-      two: two,
-      three: three,
-      four: four
+      one: formData.stepOne,
+      two: formData.stepTwo,
+      three: formData.stepThree,
+      four: formData.stepFour
     }
-    _storeData(payload)
+
+    // dispatch(resetStepData());
     navigation.navigate('Home');
   };
 
-  const removeItemValue = async (key) => {
-    try {
-      await AsyncStorage.removeItem(key);
-      return true;
-    } catch (exception) {
-      return false;
-    }
-  }
-
-  const _storeData = async (value) => {
-    // await removeItemValue("projectDetails");
-    try {
-      await AsyncStorage.setItem("projectDetails", JSON.stringify(value));
-
-    } catch (error) {
-    }
-    console.log("This is for storing data...", value);
-  };
-
-  // const _storeData = async (newData) => {
-  //   try {
-  //     // Retrieve existing data
-  //     const existingData = await AsyncStorage.getItem("projectDetails");
-  //     let data = existingData ? JSON.parse(existingData) : [];
-  
-  //     // Ensure data is an array
-  //     if (!Array.isArray(data)) {
-  //       data = []; // Initialize as an empty array if the retrieved data isn't an array
-  //     }
-  
-  //     // Append new data
-  //     data.push(newData);
-  
-  //     // Store updated data
-  //     await AsyncStorage.setItem("projectDetails", JSON.stringify(data));
-  //     console.log("Data stored successfully:", data);
-  //   } catch (error) {
-  //     console.error("Error storing data:", error);
-  //   }
+  // const handleNext = () => {
+  //   dispatch(saveStepData('stepFive', { firstName, lastName, phone }));
+  //   navigation.navigate('Home');
   // };
 
   return (
@@ -89,34 +59,34 @@ const StepFive = ({ navigation, route }) => {
 
   <Text style={styles.headerText}>Review and Submit</Text>
   </View>
-  <ScrollView style={{ marginTop: 60, marginBottom: 60 }}>
+  <ScrollView style={{ marginTop: Platform.OS === "iOS" ? 80 : 60, marginBottom: Platform.OS === "iOS" ? 80 : 60 }}>
   <View style={styles.barstyle}>
   <Text style={styles.barstyleText}>HOME OWNER'S INFORMATION</Text>
   </View>
 
   <View style={{ marginBottom: 10 }}>
-  {one.firstName ?
-  <Text style={styles.textStyle}>First Name: {one.firstName}</Text> :
+  {formData.stepOne.firstName ?
+  <Text style={styles.textStyle}>First Name: {formData.stepOne.firstName}</Text> :
   <Text style={styles.textStyle}>First Name: Nil</Text>}
 
-  {one.lastName ? 
-  <Text style={styles.textStyle}>Last Name: {one.lastName}</Text> : 
+  {formData.stepOne.lastName ? 
+  <Text style={styles.textStyle}>Last Name: {formData.stepOne.lastName}</Text> : 
   <Text style={styles.textStyle}>Last Name: Nil</Text>}
 
-  {one.address ? 
-  <Text style={styles.textStyle}>Address: {one.address}</Text> :
+  {formData.stepOne.address ? 
+  <Text style={styles.textStyle}>Address: {formData.stepOne.address}</Text> :
   <Text style={styles.textStyle}>Address: Nil</Text>}
 
-  {one.city ? 
-  <Text style={styles.textStyle}>City: {one.city}</Text> :
+  {formData.stepOne.city ? 
+  <Text style={styles.textStyle}>City: {formData.stepOne.city}</Text> :
   <Text style={styles.textStyle}>City: Nil</Text>}
 
-  {one.state ? 
-  <Text style={styles.textStyle}>State: {one.state}</Text> :
+  {formData.stepOne.state ? 
+  <Text style={styles.textStyle}>State: {formData.stepOne.state}</Text> :
   <Text style={styles.textStyle}>State: Nil</Text>}
 
-  {one.zip ?
-  <Text style={styles.textStyle}>Zip: {one.zip}</Text> : 
+  {formData.stepOne.zip ?
+  <Text style={styles.textStyle}>Zip: {formData.stepOne.zip}</Text> : 
   <Text style={styles.textStyle}>Zip: Nil</Text>}
   </View>
 
@@ -125,20 +95,20 @@ const StepFive = ({ navigation, route }) => {
   </View>
 
   <View style={{ marginBottom: 10 }}>
-  {two.companyName ?
-  <Text style={styles.textStyle}>Company Name: {two.companyName}</Text> :
+  {formData.stepTwo.companyName ?
+  <Text style={styles.textStyle}>Company Name: {formData.stepTwo.companyName}</Text> :
   <Text style={styles.textStyle}>Company Name: Nil</Text>}
 
-  {two.phone ? 
-  <Text style={styles.textStyle}>Phone: {two.phone}</Text> :
+  {formData.stepTwo.phone ? 
+  <Text style={styles.textStyle}>Phone: {formData.stepTwo.phone}</Text> :
   <Text style={styles.textStyle}>Phone: Nil</Text>}
 
-  {two.address ?
-  <Text style={styles.textStyle}>Address: {two.address}</Text> :
+  {formData.stepTwo.address ?
+  <Text style={styles.textStyle}>Address: {formData.stepTwo.address}</Text> :
   <Text style={styles.textStyle}>Address: Nil</Text>}
 
-  {two.license ?
-  <Text style={styles.textStyle}>License: {two.license}</Text> : 
+  {formData.stepTwo.license ?
+  <Text style={styles.textStyle}>License: {formData.stepTwo.license}</Text> : 
   <Text style={styles.textStyle}>License: Nil</Text>}
   </View>
 
@@ -146,16 +116,16 @@ const StepFive = ({ navigation, route }) => {
   <Text style={styles.barstyleText}>PROJECT MANAGER</Text>
   </View>
   <View style={{ marginBottom: 10 }}>
-  {three.firstName ?
-  <Text style={styles.textStyle}>First Name: {three.firstName}</Text> :
+  {formData.stepThree.firstName ?
+  <Text style={styles.textStyle}>First Name: {formData.stepThree.firstName}</Text> :
   <Text style={styles.textStyle}>First Name: Nil</Text>}
 
-  {three.lastName ?
-  <Text style={styles.textStyle}>Last Name: {three.lastName}</Text> : 
+  {formData.stepThree.lastName ?
+  <Text style={styles.textStyle}>Last Name: {formData.stepThree.lastName}</Text> : 
   <Text style={styles.textStyle}>Last Name: Nil</Text>}
 
-  {three.phone ? 
-  <Text style={styles.textStyle}>Phone: {three.phone}</Text> :
+  {formData.stepThree.phone ? 
+  <Text style={styles.textStyle}>Phone: {formData.stepThree.phone}</Text> :
   <Text style={styles.textStyle}>Phone: Nil</Text>}
   </View>
 
@@ -163,8 +133,8 @@ const StepFive = ({ navigation, route }) => {
   <Text style={styles.barstyleText}>PROJECT SITE PHOTOS</Text>
   </View>
   
-      {Object.keys(four).length != 0 ? <View style={styles.gridContainer}>
-        {four.map((photo, index) => (
+      {Object.keys(formData.stepFour.photos).length != 0 ? <View style={styles.gridContainer}>
+        {formData.stepFour.photos.map((photo, index) => (
           <TouchableOpacity key={index} style={styles.imageContainer}  onPress={() => handleProjectImageClick(photo)}>
             <Image source={{ uri: photo.uri }} style={styles.image}/>
             {photo.title ? (
