@@ -9,11 +9,14 @@ import StepThree from '../../src/screens/StepThree';   // Screen Three
 import StepFour from '../../src/screens/StepFour';       // Screen Four
 import StepFive from '../../src/screens/StepFive';   // Screen Three
 import ProjectDetails from '../../src/screens/ProjectDetails';
+import { Provider } from 'react-redux';
+import store from '../../redux/store';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    <Provider store={store}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen 
         name="Home" 
@@ -46,5 +49,6 @@ export default function App() {
           title: ""
         }}/>
       </Stack.Navigator>
+      </Provider>
   );
 }

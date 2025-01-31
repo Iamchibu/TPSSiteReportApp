@@ -11,21 +11,29 @@ import {
   TextInput 
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveStepData } from '../../redux/actions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const StepFour = ({ navigation, route }) => {
-  const { one, two, three } = route.params;
-  const [photos, setPhotos] = useState([]);
+  const dispatch = useDispatch();
+  const formData = useSelector(state => state.stepFour) || {};
+
+  const [photos, setPhotos] = React.useState(formData.photos || []); useState([]);
+  const [title, setTitle] = React.useState(formData.title || ''); 
+  const [description, setDescription] = React.useState(formData.description || '');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
   const [imageIndex, setImageIndex] = useState('');
-
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+
+  const handleNext = () => {
+    dispatch(saveStepData('stepFour', { photos }));
+    navigation.navigate('StepFive');
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -130,15 +138,7 @@ const StepFour = ({ navigation, route }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.registerBtn}
-            onPress={() =>
-              navigation.navigate('StepFive', {
-                one,
-                two,
-                three,
-                four: photos,
-              })
-            }
-          >
+            onPress={handleNext}>
             <Text style={styles.registerText}>Next</Text>
           </TouchableOpacity>
         </View>

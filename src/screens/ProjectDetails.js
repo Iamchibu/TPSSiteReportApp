@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Text, Dimensions, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Image, View, Text, Dimensions, Modal, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const height = Dimensions.get("window").height;
@@ -107,7 +107,7 @@ const handleProjectImageClick = (data) => {
     <Text style={styles.barstyleText}>PROJECT SITE PHOTOS</Text>
     </View>
          {Object.keys(data?.four).length != 0 ? 
-         <ScrollView style={{}}>
+         <ScrollView style={{ marginBottom: Platform.OS === "iOS" ?  70 : 40 }}>
           {data?.four?.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -256,7 +256,8 @@ const styles = StyleSheet.create({
     width: width * 0.78
   },
   detailsContainer: {
-    marginTop: 50
+    marginTop: 50,
+    marginBottom: Platform.OS === "iOS" ?  150 : 60
   },
   detailsText: {
     fontSize: 14,
