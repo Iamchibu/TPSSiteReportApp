@@ -7,7 +7,8 @@ const { height, width } = Dimensions.get("window");
 
 const StepTwo = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const formData = useSelector(state => state.stepTwo) || {};
+  const formData = useSelector(state => state.form.stepTwo) || {};
+  console.log("Redux State:", formData);
 
   const [companyName, setCompanyName] = useState('Transform Power Systems');
   const [phone, setPhone] = useState('+1 (617) 123 4567');

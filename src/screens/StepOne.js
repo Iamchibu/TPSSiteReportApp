@@ -8,7 +8,7 @@ const width = Dimensions.get("window").width;
 
 const StepOne = ({ navigation }) => {
   const dispatch = useDispatch();
-  const formData = useSelector(state => state.stepOne) || {};
+  const formData = useSelector(state => state.form.stepOne) || {};
 
   const [firstName, setFirstName] = React.useState(formData.firstName || '');
   const [lastName, setLastName] = React.useState(formData.lastName || '');

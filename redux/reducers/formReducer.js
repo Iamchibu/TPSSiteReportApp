@@ -9,8 +9,9 @@ const initialState = {
   },
   stepTwo: {},
   stepThree: {},
-  stepFour: {},
-  stepFive: {}
+  stepFour: { photos: [] },
+  stepFive: {},
+  projects: [],
 };
 
 const formReducer = (state = initialState, action) => {
@@ -20,9 +21,15 @@ const formReducer = (state = initialState, action) => {
         ...state,
         [action.payload.step]: {
           ...state[action.payload.step],
-          ...action.payload.data // Use spread to merge the new data with the existing data for the specific step
-        }
+          ...action.payload.data,
+        },
       };
+    case 'RESET_STEP_DATA':
+      return { ...initialState };
+    case 'ADD_PROJECT':
+      return { ...state, projects: action.payload };
+    case 'LOAD_PROJECTS':
+      return { ...state, projects: action.payload };
     default:
       return state;
   }
