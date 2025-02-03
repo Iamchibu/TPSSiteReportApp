@@ -106,9 +106,9 @@ const handleProjectImageClick = (data) => {
     <View style={styles.barstyle}>
     <Text style={styles.barstyleText}>PROJECT SITE PHOTOS</Text>
     </View>
-         {Object.keys(data?.four).length != 0 ? 
+         {Object.keys(data?.four.photos).length != 0 ? 
          <ScrollView style={{ marginBottom: Platform.OS === "iOS" ?  70 : 40 }}>
-          {data?.four?.map((item, index) => (
+          {data?.four?.photos.map((item, index) => (
             <TouchableOpacity
               key={index}
               style={styles.projectItem}

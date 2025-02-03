@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, Text, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadProjects } from '../../redux/actions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -8,20 +10,17 @@ const width = Dimensions.get("window").width;
 export default function ProjectList({ navigation }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zip, setZip] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
-  const [companyAddress, setCompanyAddress] = useState('');
-  const [license, setLicense] = useState('');
-  const [msg, setMsg] = useState('');
+  const [msg, setMsg] = useState('No data found.');
   const [projectData, setProjectData] = useState(null);
 
+  const dispatch = useDispatch();
+  const projects = useSelector(state => state.form.projects);
+
   useEffect(() => {
-    _retrieveData();
-  }, []); // Empty dependency array ensures this only runs once
+    dispatch(loadProjects());
+  }, [dispatch]);
 
   const _retrieveData = async () => {
     try {
@@ -60,8 +59,9 @@ export default function ProjectList({ navigation }) {
   //   }
   // };
   
-  const handleProjectClick = () => {
-    navigation.navigate('ProjectDetails', { data: projectData });
+  const handleProjectClick = (item) => {
+    console.log(item)
+    navigation.navigate('ProjectDetails', { data: item });
   };
 
   return (
@@ -79,11 +79,16 @@ export default function ProjectList({ navigation }) {
 
       </View>
 
-      {msg ? 
+      {projects.length == 0 ? 
+      
   <View style={{ marginTop: 70 }}>
     <Text style={styles.registerText}>{msg}</Text>
   </View> :
   <View style={{ marginTop: 50 }}>
+    <FlatList
+        data={projects}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
     <TouchableOpacity 
       style={{ 
         flexDirection: "row", 
@@ -94,7 +99,7 @@ export default function ProjectList({ navigation }) {
         padding: 15,
         alignItems: "center" // Ensures vertical alignment of image and text
       }}
-      onPress={()=> handleProjectClick()}
+      onPress={()=> handleProjectClick(item)}
     >
       <Image
         source={require('../../assets/images/icon.png')}
@@ -106,19 +111,21 @@ export default function ProjectList({ navigation }) {
         }}
       />
       <View>
-        {companyName ? 
-        <Text style={{ color: "#000", fontWeight: "600", fontSize: 16 }}>{companyName}</Text> :
+        {item.two.companyName ? 
+        <Text style={{ color: "#000", fontWeight: "600", fontSize: 16 }}>{item.two.companyName}</Text> :
         <Text style={{ color: "#000", fontWeight: "600", fontSize: 16 }}>No Company Name</Text>}
 
 
-        {firstName && lastName ? 
-        <Text style={{ color: "#000", fontSize: 12 }}>{firstName} {lastName}</Text> :
+        {item.three.firstName && item.three.lastName ? 
+        <Text style={{ color: "#000", fontSize: 12 }}>{item.three.firstName} {item.three.lastName}</Text> :
         <Text style={{ color: "#000", fontSize: 12 }}>Nil</Text>}
 
-        {phone ? <Text style={{ color: "#000", fontSize: 12 }}>{phone}</Text> :
+        {item.three.phone ? <Text style={{ color: "#000", fontSize: 12 }}>{item.three.phone}</Text> :
         <Text style={{ color: "#000", fontSize: 12 }}>Nil</Text>}
       </View>
     </TouchableOpacity>
+    )}
+    />
   </View>
 }
 

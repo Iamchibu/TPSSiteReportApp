@@ -19,7 +19,9 @@ const width = Dimensions.get("window").width;
 
 const StepFour = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const formData = useSelector(state => state.stepFour) || {};
+  const formData = useSelector(state => state.form.stepFour) || {};
+  console.log("Redux State:", formData);
+
 
   const [photos, setPhotos] = React.useState(formData.photos || []); useState([]);
   const [title, setTitle] = React.useState(formData.title || ''); 

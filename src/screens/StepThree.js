@@ -8,7 +8,8 @@ const width = Dimensions.get("window").width;
 
 const StepThree = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const formData = useSelector(state => state.stepThree) || {};
+  const formData = useSelector(state => state.form.stepThree) || {};
+  console.log("Redux State:", formData);
 
   const [firstName, setFirstName] = React.useState(formData.firstName || '');
   const [lastName, setLastName] = React.useState(formData.lastName || '');

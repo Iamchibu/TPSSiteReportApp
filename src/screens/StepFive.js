@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Text, Platform, Image, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveStepData } from '../../redux/actions';
+import { addProject, resetStepData } from '../../redux/actions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const StepFive = ({ navigation, route }) => {
-  // const { one, two, three, four } = route.params;
   const dispatch = useDispatch();
-  const formData = useSelector(state => state) || {};
+  const formData = useSelector(state => state.form) || {};
 
   const [image, setImage] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -25,26 +23,21 @@ const StepFive = ({ navigation, route }) => {
       setIsModalVisible(false);
   };
 
-  const handleSubmit = () => {
-    // Collect all form data and images for submission
+  const handleSubmit = async () => {
     console.log("Form submitted!");
-
-    const payload = {
+  
+    const newProject = {
       one: formData.stepOne,
       two: formData.stepTwo,
       three: formData.stepThree,
-      four: formData.stepFour
-    }
-
-    // dispatch(resetStepData());
+      four: formData.stepFour,
+    };
+  
+    dispatch(addProject(newProject));
     navigation.navigate('Home');
+    dispatch(resetStepData());
   };
-
-  // const handleNext = () => {
-  //   dispatch(saveStepData('stepFive', { firstName, lastName, phone }));
-  //   navigation.navigate('Home');
-  // };
-
+  
   return (
     <View style={{ backgroundColor: "#FFF", flex: 1 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", top: 0, position: "absolute", borderStartWidth: 2, borderStartColor: "#542d84", borderBottomColor: "#c8c808", borderBottomWidth: 0.5 }}>
