@@ -8,7 +8,8 @@ import {
   StyleSheet, 
   ScrollView, 
   Modal, 
-  TextInput 
+  TextInput,
+  Platform
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,15 +18,14 @@ import { saveStepData } from '../../redux/actions';
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const StepFour = ({ navigation, route }) => {
+const StepFour = ({ navigation }) => {
   const dispatch = useDispatch();
   const formData = useSelector(state => state.form.stepFour) || {};
   console.log("Redux State:", formData);
 
-
-  const [photos, setPhotos] = React.useState(formData.photos || []); useState([]);
-  const [title, setTitle] = React.useState(formData.title || ''); 
-  const [description, setDescription] = React.useState(formData.description || '');
+  const [photos, setPhotos] = React.useState(formData.photos || []);
+  const [title, setTitle] = React.useState(''); 
+  const [description, setDescription] = React.useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [image, setImage] = useState('');
@@ -52,7 +52,7 @@ const StepFour = ({ navigation, route }) => {
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       setCurrentImage(result.assets[0]);
-      setIsModalVisible(true); // Show modal to enter details
+      setIsModalVisible(true);
     }
   };
 
@@ -97,7 +97,8 @@ const StepFour = ({ navigation, route }) => {
       <Text style={styles.headerText}>Project Site Photos</Text>
       </View>
 
-      <ScrollView style={{ marginTop: 50, marginBottom: 60 }}>
+      <ScrollView 
+      style={{ marginTop: Platform.OS === "iOS" ? 60 : 50, marginBottom: Platform.OS === "iOS" ? 70 : 50 }}>
         <View style={styles.selectButtonContainer}>
           <TouchableOpacity style={styles.photosBtn} onPress={pickImage}>
             <Text style={styles.signInText}>Add More Images</Text>
@@ -107,7 +108,6 @@ const StepFour = ({ navigation, route }) => {
         <View style={styles.gridContainer}>
         {photos.map((photo, index) => (
           <TouchableOpacity key={index} style={styles.imageContainer}  onPress={() => handleProjectImageClick(photo, index)}>
-          {/* // <View key={index} style={styles.imageContainer}> */}
             <Image source={{ uri: photo.uri }} style={styles.image} />
             <TouchableOpacity
               style={styles.deleteButton}
@@ -133,10 +133,14 @@ const StepFour = ({ navigation, route }) => {
         ))}
       </View>
 
-
         <View style={styles.navigationButtons}>
-          <TouchableOpacity style={styles.signInBtn} onPress={() => navigation.goBack()}>
-            <Text style={styles.signInText}>Previous</Text>
+          <TouchableOpacity style={styles.signInBtn} onPress={() => {
+            if(photos){
+              dispatch(saveStepData('stepFour', { photos }));
+            }
+            navigation.goBack()
+            }}>
+            <Text style={styles.signInText}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.registerBtn}
@@ -146,8 +150,8 @@ const StepFour = ({ navigation, route }) => {
         </View>
       </ScrollView>
 
-      {/* Modal for adding title and description */}
       <Modal visible={isModalVisible} transparent>
+      <ScrollView style={{ marginTop: 60 }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add Details</Text>
@@ -173,12 +177,14 @@ const StepFour = ({ navigation, route }) => {
               numberOfLines={4}
               onChangeText={setDescription}
               style={styles.inputDesc}
+              // returnKeyType="done"
             />
             <TouchableOpacity style={styles.addButton} onPress={addImageWithDetails}>
               <Text style={styles.addButtonText}>Add</Text>
             </TouchableOpacity>
           </View>
         </View>
+        </ScrollView>
       </Modal>
 
       {image && 
@@ -316,15 +322,17 @@ const styles = StyleSheet.create({
     color: "#542d84",
   },
   navigationButtons: {
-    marginTop: 20,
-    alignSelf: "center",
+    marginTop: 50,
+    marginBottom: 7,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
   signInBtn: {
     backgroundColor: "#542d84",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "white",
-    width: width * 0.9,
+    width: width * 0.45,
     padding: 15,
     marginBottom: 10,
   },
@@ -333,8 +341,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#542d84",
-    width: width * 0.9,
+    width: width * 0.45,
     padding: 15,
+    marginBottom: 10,
   },
   registerText: {
     color: "#542d84",
@@ -382,11 +391,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#542d84",
     borderRadius: 5,
     padding: 10,
+    width: width * 0.45,
     alignItems: "center",
   },
   addButtonText: {
     color: "#FFF",
     fontSize: 16,
+    fontWeight: "600"
   },
   modalImageContainer: {
     flex: 1,

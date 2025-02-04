@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
         style={{ padding: 0, position: "absolute", top: 150, alignSelf: "center" }}
         />
 
-      <Text style={styles.welcomeText}>WELCOME TO TPS SITE REPORT APP</Text>
+      <Text style={styles.welcomeText}>Welcome to TPS Site Report App</Text>
 
       <View style={{ marginVertical: 15, justifyContent: "space-between" }}>
         <TouchableOpacity style={styles.signInBtn} onPress={() => navigation.navigate('StepOne')}> 

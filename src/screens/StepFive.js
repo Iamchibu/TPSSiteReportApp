@@ -52,7 +52,7 @@ const StepFive = ({ navigation, route }) => {
 
   <Text style={styles.headerText}>Review and Submit</Text>
   </View>
-  <ScrollView style={{ marginTop: Platform.OS === "iOS" ? 80 : 60, marginBottom: Platform.OS === "iOS" ? 80 : 60 }}>
+  <ScrollView style={{ marginTop: Platform.OS === "iOS" ? 80 : 60, marginBottom: Platform.OS === "iOS" ? 70 : 30 }}>
   <View style={styles.barstyle}>
   <Text style={styles.barstyleText}>HOME OWNER'S INFORMATION</Text>
   </View>
@@ -167,9 +167,9 @@ const StepFive = ({ navigation, route }) => {
           </Modal>
              } 
 
-  <View style={{ marginTop: 20, alignSelf: "center" }}>
+  <View style={styles.buttonContainer}>
     <TouchableOpacity style={styles.signInBtn} onPress={() => navigation.goBack()}> 
-    <Text style={styles.signInText}>Previous</Text>
+    <Text style={styles.signInText}>Back</Text>
     </TouchableOpacity>
 
     <TouchableOpacity style={styles.registerBtn} onPress={handleSubmit}>  
@@ -289,14 +289,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  buttonContainer: { 
+    marginTop: 50, 
+    marginBottom: 50,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
   signInBtn:{
     backgroundColor: "#542d84",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "white",
-    width: width * 0.9, 
+    width: width * 0.45, 
     padding: 15,
-    marginTop: 50,
     marginBottom: 10
   },
   signInText:{
@@ -310,9 +315,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#542d84",
-    width: width * 0.9, 
+    width: width * 0.45, 
     padding: 15,
-    marginBottom: 30,
+    marginBottom: 10,
     alignSelf: "center"
   },
   registerText:{
