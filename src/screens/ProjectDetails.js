@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image, View, Text, Dimensions, Modal, TouchableOpacity, Platform, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -32,9 +31,7 @@ const handleProjectImageClick = (data) => {
         style={{ alignSelf: "flex-start", left: -45 }}
         />
       <Text style={styles.headerText}>Project Details</Text>
-
       </View>
-    
 
   <ScrollView style={styles.detailsContainer}>
     <View style={styles.barstyle}>
@@ -256,7 +253,7 @@ const styles = StyleSheet.create({
     width: width * 0.78
   },
   detailsContainer: {
-    marginTop: 50,
+    marginTop: Platform.OS === "iOS" ? 80 : 60,
     marginBottom: Platform.OS === "iOS" ?  150 : 60
   },
   detailsText: {

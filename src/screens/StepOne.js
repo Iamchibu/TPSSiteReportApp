@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, Platform, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import React, { useRef } from 'react';
+import { 
+  View, Text, Image, Platform, TextInput, TouchableOpacity, 
+  StyleSheet, ScrollView, Dimensions, KeyboardAvoidingView, 
+  TouchableWithoutFeedback, Keyboard 
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveStepData } from '../../redux/actions';
 
-const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const StepOne = ({ navigation }) => {
@@ -17,48 +20,117 @@ const StepOne = ({ navigation }) => {
   const [state, setState] = React.useState(formData.state || '');
   const [zip, setZip] = React.useState(formData.zip || '');
 
+  // Refs for input fields
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const addressRef = useRef(null);
+  const cityRef = useRef(null);
+  const stateRef = useRef(null);
+  const zipRef = useRef(null);
+
   const handleNext = () => {
     dispatch(saveStepData('stepOne', { firstName, lastName, address, city, state, zip }));
     navigation.navigate('StepTwo');
   };
 
   return (
-    <View style={{ padding: 10, flex: 1, backgroundColor: "#FFF" }}>
-      <View style={styles.headerContainer}>
-        <Image
-          source={require('../../assets/images/tps_small.png')}
-          resizeMode="center"
-          style={{ alignSelf: "flex-start", left: -45 }}
-        />
-        <Text style={styles.headerText}>Home Owner Information</Text>
-      </View>
-
-      <ScrollView style={{ marginTop: Platform.OS === "iOS" ? 60 : 50, marginBottom: Platform.OS === "iOS" ? 170 : 100 }}>
-        <View style={{ marginTop: 60, marginBottom: 60 }}>
-          {[{ placeholder: "First Name", value: firstName, setValue: setFirstName },
-            { placeholder: "Last Name", value: lastName, setValue: setLastName },
-            { placeholder: "Address", value: address, setValue: setAddress },
-            { placeholder: "City", value: city, setValue: setCity },
-            { placeholder: "State", value: state, setValue: setState },
-            { placeholder: "Zip code", value: zip, setValue: setZip, keyboardType: "numeric" }
-          ].map(({ placeholder, value, setValue, keyboardType }, index) => (
-            <TextInput
-              key={index}
-              style={styles.input}
-              placeholder={placeholder}
-              placeholderTextColor={"#979797"}
-              value={value}
-              onChangeText={setValue}
-              keyboardType={keyboardType || "default"}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ padding: 10, flex: 1, backgroundColor: "#FFF" }}>
+          <View style={styles.headerContainer}>
+            <Image
+              source={require('../../assets/images/tps_small.png')}
+              resizeMode="center"
+              style={{ alignSelf: "flex-start", left: -45 }}
             />
-          ))}
+            <Text style={styles.headerText}>Home Owner Information</Text>
+          </View>
 
-          <TouchableOpacity style={styles.registerBtn} onPress={handleNext}>  
-            <Text style={styles.registerText}>Next</Text>
-          </TouchableOpacity>
+          <ScrollView 
+            style={{ marginTop: Platform.OS === "iOS" ? 60 : 50, marginBottom: Platform.OS === "iOS" ? 10 : 50 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={{ marginTop: 60, marginBottom: 60 }}>
+              <TextInput
+                ref={firstNameRef}
+                style={styles.input}
+                placeholder="First Name"
+                placeholderTextColor={"#979797"}
+                value={firstName}
+                onChangeText={setFirstName}
+                returnKeyType="next"
+                onSubmitEditing={() => lastNameRef.current?.focus()}
+              />
+
+              <TextInput
+                ref={lastNameRef}
+                style={styles.input}
+                placeholder="Last Name"
+                placeholderTextColor={"#979797"}
+                value={lastName}
+                onChangeText={setLastName}
+                returnKeyType="next"
+                onSubmitEditing={() => addressRef.current?.focus()}
+              />
+
+              <TextInput
+                ref={addressRef}
+                style={styles.input}
+                placeholder="Address"
+                placeholderTextColor={"#979797"}
+                value={address}
+                onChangeText={setAddress}
+                returnKeyType="next"
+                onSubmitEditing={() => cityRef.current?.focus()}
+              />
+
+              <TextInput
+                ref={cityRef}
+                style={styles.input}
+                placeholder="City"
+                placeholderTextColor={"#979797"}
+                value={city}
+                onChangeText={setCity}
+                returnKeyType="next"
+                onSubmitEditing={() => stateRef.current?.focus()}
+              />
+
+              <TextInput
+                ref={stateRef}
+                style={styles.input}
+                placeholder="State"
+                placeholderTextColor={"#979797"}
+                value={state}
+                onChangeText={setState}
+                returnKeyType="next"
+                autoCapitalize="characters"
+                maxLength={2}
+                onSubmitEditing={() => zipRef.current?.focus()}
+              />
+
+              <TextInput
+                ref={zipRef}
+                style={styles.input}
+                placeholder="Zip code"
+                placeholderTextColor={"#979797"}
+                value={zip}
+                maxLength={5}
+                onChangeText={setZip}
+                keyboardType="numeric"
+                returnKeyType="done"
+              />
+
+              <TouchableOpacity style={styles.registerBtn} onPress={handleNext}>
+                <Text style={styles.registerText}>Next</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -77,6 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d9d1e9",
     borderWidth: 1,
     borderColor: "#542d84",
+    borderRadius: 5,
     width: width * 0.88,
     height: 56,
     textAlign: "left",

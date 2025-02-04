@@ -3,7 +3,7 @@ import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView,
 import { useDispatch, useSelector } from 'react-redux';
 import { saveStepData } from '../../redux/actions';
 
-const { height, width } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const StepTwo = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -11,7 +11,7 @@ const StepTwo = ({ navigation, route }) => {
   console.log("Redux State:", formData);
 
   const [companyName, setCompanyName] = useState('Transform Power Systems');
-  const [phone, setPhone] = useState('+1 (617) 123 4567');
+  const [phone, setPhone] = useState('+1 (617) 123-4567');
   const [address, setAddress] = useState('Boston, MA');
   const [license, setLicense] = useState('AS1DF2QW3ER4');
 
@@ -22,7 +22,6 @@ const StepTwo = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header Section */}
       <View style={styles.header}>
         <Image
           source={require('../../assets/images/tps_small.png')}
@@ -31,7 +30,6 @@ const StepTwo = ({ navigation, route }) => {
         <Text style={styles.headerText}>Contractor Information</Text>
       </View>
 
-      {/* Form Fields */}
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.formContainer}>
           {[{
@@ -54,16 +52,20 @@ const StepTwo = ({ navigation, route }) => {
             />
           ))}
 
-          {/* Navigation Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.signInBtn} onPress={() => navigation.goBack()}> 
-              <Text style={styles.signInText}>Previous</Text>
+            <TouchableOpacity style={styles.signInBtn} onPress={() => {
+              
+              if(companyName || address || license || phone){
+                dispatch(saveStepData('stepTwo', { companyName, phone, address, license }));
+              }
+              navigation.goBack()
+              }}> 
+              <Text style={styles.signInText}>Back</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={styles.registerBtn} 
-              onPress={handleNext}
-            >  
+              onPress={handleNext}>  
               <Text style={styles.registerText}>Next</Text>
             </TouchableOpacity>
           </View>
@@ -111,13 +113,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5
   },
-  buttonContainer: { marginTop: 20, alignSelf: "center" },
+  buttonContainer: { 
+    marginTop: 50, 
+    marginBottom: 7,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    // position: "absolute",
+    // bottom: 0
+  },
   signInBtn: {
     backgroundColor: "#542d84",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "white",
-    width: width * 0.9, 
+    width: width * 0.45, 
     padding: 15,
     marginBottom: 10
   },
@@ -127,9 +136,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#542d84",
-    width: width * 0.9, 
+    width: width * 0.45, 
     padding: 15,
-    marginBottom: 30
+    marginBottom: 10
   },
   registerText: { color: "#542d84", fontSize: 18, fontWeight: "600", textAlign: "center" }
 });

@@ -1,161 +1,178 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import React, { useRef } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Dimensions
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveStepData } from '../../redux/actions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const StepThree = ({ navigation, route }) => {
+const StepThree = ({ navigation }) => {
   const dispatch = useDispatch();
   const formData = useSelector(state => state.form.stepThree) || {};
-  console.log("Redux State:", formData);
+
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const phoneRef = useRef(null);
 
   const [firstName, setFirstName] = React.useState(formData.firstName || '');
   const [lastName, setLastName] = React.useState(formData.lastName || '');
   const [phone, setPhone] = React.useState(formData.phone || '');
 
+  const formatPhoneNumber = (input) => {
+    // Remove non-numeric characters
+    const cleaned = input.replace(/\D/g, '');
+  
+    // Ensure we only take the last 10 digits (ignore existing "+1" if present)
+    const trimmed = cleaned.startsWith('1') ? cleaned.slice(1, 11) : cleaned.slice(0, 10);
+  
+    // Apply formatting: +1 (XXX) XXX-XXXX
+    if (trimmed.length > 6) {
+      return `+1 (${trimmed.slice(0, 3)}) ${trimmed.slice(3, 6)}-${trimmed.slice(6)}`;
+    } else if (trimmed.length > 3) {
+      return `+1 (${trimmed.slice(0, 3)}) ${trimmed.slice(3)}`;
+    } else if (trimmed.length > 0) {
+      return `+1 (${trimmed}`;
+    } else {
+      return '+1 ';
+    }
+  };
+  
+  
   const handleNext = () => {
     dispatch(saveStepData('stepThree', { firstName, lastName, phone }));
     navigation.navigate('StepFour');
   };
 
   return (
-    <View style={{ padding: 10, flex: 1, backgroundColor: "#FFF" }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", top: 0, position: "absolute", borderStartWidth: 2, borderStartColor: "#542d84", borderBottomColor: "#c8c808", borderBottomWidth: 0.5 }}>
-
-      <Image
-        source={require('../../assets/images/tps_small.png')}
-        height={10/2}
-        width={10/2}
-        resizeMode="center"
-        style={{ alignSelf: "flex-start", left: -45 }}
-        />
-      <Text style={styles.headerText}>Project Manager</Text>
-
-      </View>
-    <ScrollView style={{ marginTop: 50 }}>
-      <View style={{ marginTop: 60 }}>
-          <TextInput
-              backgroundColor={"#d9d1e9"}
-              borderWidth = {1}
-              borderColor={"#542d84"}
-              // borderColor={this.state.em == "empty" || !this.state.correct && this.state.email != "" ? 'red' : "transparent"}
-              width={width * 0.88}
-              height={56}
-              textAlign={"left"}
-              alignSelf={"center"}
-              paddingTop={8}
-              paddingBottom={8}
-              paddingStart={15}
-              paddingEnd={22}
-              marginBottom={10}
-              opacity={1}
-              fontSize={16}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-              // keyboardType="email-address"
-              returnKeyType="next"
-              placeholder={"First Name"}
-              placeholderTextColor={"#979797"}
-              // ref={(input) => { this.emailTextInput = input; }}
-              // onSubmitEditing={() => { this.passwordTextInput.focus(); }}
-              // blurOnSubmit={false}
-              // value={this.state.email}
-              // onChangeText={this.handleEmail}
-              value={firstName}
-              onChangeText={setFirstName}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1, backgroundColor: "#FFF", padding: 10 }}>
+          <View style={styles.headerContainer}>
+            <Image
+              source={require('../../assets/images/tps_small.png')}
+              resizeMode="center"
+              style={{ alignSelf: "flex-start", left: -45 }}
             />
+            <Text style={styles.headerText}>Project Manager</Text>
+          </View>
 
-          <TextInput
-              backgroundColor={"#d9d1e9"}
-              borderWidth = {1}
-              borderColor={"#542d84"}
-              // borderColor={this.state.em == "empty" || !this.state.correct && this.state.email != "" ? 'red' : "transparent"}
-              width={width * 0.88}
-              height={56}
-              textAlign={"left"}
-              alignSelf={"center"}
-              paddingTop={8}
-              paddingBottom={8}
-              paddingStart={15}
-              paddingEnd={22}
-              marginBottom={10}
-              opacity={1}
-              fontSize={16}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-              // keyboardType="email-address"
-              returnKeyType="next"
-              placeholder={"Last Name"}
-              placeholderTextColor={"#979797"}
-              // ref={(input) => { this.emailTextInput = input; }}
-              // onSubmitEditing={() => { this.passwordTextInput.focus(); }}
-              // blurOnSubmit={false}
-              // value={this.state.email}
-              // onChangeText={this.handleEmail}
-              value={lastName}
-              onChangeText={setLastName}
-            />
+          <ScrollView
+            style={{ marginTop: Platform.OS === "iOS" ? 60 : 50, marginBottom: Platform.OS === "iOS" ? 170 : 100 }}
+              contentContainerStyle={{ paddingBottom: 20 }}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
+            <View style={{ marginTop: 60 }}>
+              <TextInput
+                ref={firstNameRef}
+                style={styles.input}
+                placeholder="First Name"
+                placeholderTextColor="#979797"
+                value={firstName}
+                onChangeText={setFirstName}
+                returnKeyType="next"
+                onSubmitEditing={() => lastNameRef.current.focus()}
+              />
+              <TextInput
+                ref={lastNameRef}
+                style={styles.input}
+                placeholder="Last Name"
+                placeholderTextColor="#979797"
+                value={lastName}
+                onChangeText={setLastName}
+                returnKeyType="next"
+                onSubmitEditing={() => phoneRef.current.focus()}
+              />
+              <TextInput
+                ref={phoneRef}
+                style={styles.input}
+                placeholder="Phone"
+                placeholderTextColor="#979797"
+                keyboardType="numeric"
+                value={phone}
+                maxLength={17}
+                returnKeyType="done"
+                onChangeText={(text) => setPhone(formatPhoneNumber(text))}
+              />
 
-          <TextInput
-              backgroundColor={"#d9d1e9"}
-              borderWidth = {1}
-              borderColor={"#542d84"}
-              // borderColor={this.state.em == "empty" || !this.state.correct && this.state.email != "" ? 'red' : "transparent"}
-              width={width * 0.88}
-              height={56}
-              textAlign={"left"}
-              alignSelf={"center"}
-              paddingTop={8}
-              paddingBottom={8}
-              paddingStart={15}
-              paddingEnd={22}
-              marginBottom={10}
-              opacity={1}
-              fontSize={16}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-              keyboardType="numeric"
-              returnKeyType="next"
-              placeholder={"Phone"}
-              placeholderTextColor={"#979797"}
-              // ref={(input) => { this.emailTextInput = input; }}
-              // onSubmitEditing={() => { this.passwordTextInput.focus(); }}
-              // blurOnSubmit={false}
-              // value={this.state.email}
-              // onChangeText={this.handleEmail}
-              value={phone}
-              onChangeText={setPhone}
-            />
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.signInBtn} onPress={() => { 
+                  if(firstName || lastName || phone){
+                    dispatch(saveStepData('stepThree', { firstName, lastName, phone }));
+                  }
+                  navigation.goBack()
+                  }}>
+                  <Text style={styles.signInText}>Back</Text>
+                </TouchableOpacity>
 
-            <View style={{ marginTop: 20, alignSelf: "center" }}>
-            <TouchableOpacity style={styles.signInBtn} onPress={() => navigation.goBack()}> 
-            <Text style={styles.signInText}>Previous</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.registerBtn} onPress={handleNext}>  
-            <Text style={styles.registerText}>Next</Text>
-            </TouchableOpacity>
-      </View>
-      </View>
-    </ScrollView>
-    </View>
+                <TouchableOpacity style={styles.registerBtn} onPress={handleNext}>
+                  <Text style={styles.registerText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  signInBtn:{
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    top: 0,
+    position: "absolute",
+    borderStartWidth: 2,
+    borderStartColor: "#542d84",
+    borderBottomColor: "#c8c808",
+    borderBottomWidth: 0.5
+  },
+  input: {
+    backgroundColor: "#d9d1e9",
+    borderWidth: 1,
+    borderColor: "#542d84",
+    borderRadius: 5,
+    width: width * 0.88,
+    height: 56,
+    textAlign: "left",
+    alignSelf: "center",
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    fontSize: 16
+  },
+  buttonContainer: { 
+    marginTop: 100, 
+    marginBottom: 7,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+  signInBtn: {
     backgroundColor: "#542d84",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "white",
-    width: width * 0.9, 
+    width: width * 0.45,
     padding: 15,
-    marginTop: 50,
     marginBottom: 10
   },
-  signInText:{
+  signInText: {
     color: "#FFF",
     fontSize: 18,
     fontWeight: "600",
@@ -166,18 +183,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#542d84",
-    width: width * 0.9, 
+    width: width * 0.45,
     padding: 15,
-    marginBottom: 30,
+    marginBottom: 10,
     alignSelf: "center"
   },
-  registerText:{
+  registerText: {
     color: "#542d84",
     fontSize: 18,
     fontWeight: "600",
     textAlign: "center"
   },
-  headerText:{
+  headerText: {
     color: "#542d84",
     fontSize: 13,
     fontWeight: "600",
@@ -185,14 +202,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
     marginEnd: 20,
     width: width * 0.45
-  },
-  welcomeText: {
-    color: "#808080",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 30
   }
-})
+});
 
 export default StepThree;
