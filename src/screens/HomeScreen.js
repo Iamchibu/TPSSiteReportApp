@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Image, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -9,8 +9,6 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: height, backgroundColor: "#FFF" }}>
       <Image
         source={require('../../assets/images/tps_small.png')}
-        // height={50}
-        // width={100}
         style={{ padding: 0, position: "absolute", top: 150, alignSelf: "center" }}
         />
 
@@ -24,12 +22,6 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.registerBtn} onPress={() => navigation.navigate('explore')}>  
           <Text style={styles.registerText}>View All Site Reports</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.signInBtn}> 
-          <Text style={styles.signInText}>Sign in!</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.registerBtn}> 
-          <Text style={styles.registerText}>Register!</Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );
