@@ -5,7 +5,7 @@ This is Transform Power System's Site Reporting Mobile for both iOS and Android
 
 **Transform Power Systems** [TPS](https://tps-energy.com/) 
 
-
+**To test the app**
 Click on this [link](https://expo.dev/accounts/iamchibu/projects/TPSSiteReportApp/updates/904f1b34-6c5b-404e-8787-c9cf018f1f35) to test the app, and do the following below:
 
 1. Then click "Preview" under "Update: Initial upload",
