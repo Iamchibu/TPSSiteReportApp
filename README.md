@@ -5,6 +5,9 @@ This is Transform Power System's Site Reporting Mobile for both iOS and Android
 
 **Transform Power Systems** [TPS](https://tps-energy.com/) 
 
+
+Click on this [link](https://expo.dev/accounts/iamchibu/projects/TPSSiteReportApp/updates/904f1b34-6c5b-404e-8787-c9cf018f1f35) to test the app and create an Expo Go account.
+
 # Mobile Screenshots📱👋
 ## iOS
 <img src='assets/screenshots/ios/1.PNG' width='220'> <img src='assets/screenshots/ios/2.PNG' width='220'>
