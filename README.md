@@ -9,7 +9,7 @@ This is Transform Power System's Site Reporting Mobile for both iOS and Android
 
 Click on this [link](https://expo.dev/accounts/iamchibu/projects/TPSSiteReportApp/updates/904f1b34-6c5b-404e-8787-c9cf018f1f35) to test the app, and do the following below:
 
-1. Then click "Preview" under "Update: Initial upload",
+1. Click "Preview" under "Update: Initial upload",
 2. Download Expo Go from either AppStore or PlayStore,
 3. Then click on "open" on Expo Go option.
 4. Then try the App!📱
