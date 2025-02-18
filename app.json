@@ -36,6 +36,21 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "0768fe0c-e1bf-43da-a0a5-1ccf6b89c647"
+      }
+    },
+    "owner": "iamchibu",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/0768fe0c-e1bf-43da-a0a5-1ccf6b89c647"
     }
   }
 }
